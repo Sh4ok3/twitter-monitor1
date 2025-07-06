@@ -1,0 +1,24 @@
+name: 🐦 Twitter 舆情监控
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - env:
+          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+        run: python scrape_tweets.py
+      - run: python preprocess.py
+      - run: python analyze.py
+      - env:
+          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+        run: python notify.py
