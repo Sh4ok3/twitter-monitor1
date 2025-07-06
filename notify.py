@@ -1,20 +1,22 @@
 import os, json, requests
 
-def send_email(msg):
-    url = "https://api.sendgrid.com/v3/mail/send"
-    headers = {
-        "Authorization": f"Bearer {os.getenv('EMAIL_API_KEY')}",
-        "Content-Type": "application/json"
-    }
+def send_pushplus(msg):
+    token = os.getenv("PUSHPLUS_TOKEN")
+    url = "https://www.pushplus.plus/send"
     payload = {
-        "personalizations":[{"to":[{"email":"your_email@example.com"}]}],
-        "from":{"email":"noreply@monitor.com"},
-        "subject":"【舆情预警】情感异常检测",
-        "content":[{"type":"text/plain","value":msg}]
+        "token": token,
+        "title": "【舆情预警】情感异常检测",
+        "content": msg,
+        "template": "txt"
     }
-    requests.post(url, headers=headers, json=payload)
+    resp = requests.post(url, json=payload)
+    if resp.status_code != 200 or resp.json().get("code") != 200:
+        print("PushPlus 发送失败：", resp.text)
 
 if __name__ == "__main__":
+    # 读取分析结果
     a = json.load(open("analysis.json", encoding="utf-8"))
+    # 当 z-score 低于 -3 时才推送
     if a["z"] < -3:
-        send_email(f"检测到 Z-score={a['z']:.2f}，请关注。")
+        msg = f"检测到 Z-score={a['z']:.2f}，可能有重大事件，请及时关注。"
+        send_pushplus(msg)
