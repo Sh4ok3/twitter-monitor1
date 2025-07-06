@@ -20,5 +20,5 @@ jobs:
       - run: python preprocess.py
       - run: python analyze.py
       - env:
-          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: python notify.py
