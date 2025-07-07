@@ -1,6 +1,6 @@
 tweepy
 transformers
-nltk
 numpy
 matplotlib
 requests
+snscrape
