@@ -15,10 +15,9 @@ jobs:
           python-version: '3.11'
       - run: pip install -r requirements.txt
       - env:
-          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
-        run: python scrape_tweets.py
-      - run: python preprocess.py
-      - run: python analyze.py
+           - name: 拉取推文 (snscrape)
+    run: python scrape_tweets.py
+
       - env:
            PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: python notify.py
