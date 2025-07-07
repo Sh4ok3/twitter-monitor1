@@ -9,15 +9,27 @@ jobs:
   monitor:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - env:
-           - name: 拉取推文 (snscrape)
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: 拉取推文 (snscrape)
         run: python scrape_tweets.py
 
-      - env:
-           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+      - name: 文本预处理
+        run: python preprocess.py
+
+      - name: 情感分析
+        run: python analyze.py
+
+      - name: 发送告警
+        env:
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: python notify.py
