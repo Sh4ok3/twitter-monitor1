@@ -5,18 +5,14 @@ def send_pushplus(msg):
     url = "https://www.pushplus.plus/send"
     payload = {
         "token": token,
-        "title": "【舆情预警】情感异常检测",
+        "title": "【舆情预警-测试】",
         "content": msg,
         "template": "txt"
     }
     resp = requests.post(url, json=payload)
-    if resp.status_code != 200 or resp.json().get("code") != 200:
-        print("PushPlus 发送失败：", resp.text)
+    print("HTTP:", resp.status_code, resp.text)
 
 if __name__ == "__main__":
-    # 读取分析结果
     a = json.load(open("analysis.json", encoding="utf-8"))
-    # 当 z-score 低于 -3 时才推送
-    if a["z"] < -3:
-        msg = f"检测到 Z-score={a['z']:.2f}，可能有重大事件，请及时关注。"
-        send_pushplus(msg)
+    # 直接发送，无论 z 值
+    send_pushplus(f"测试推送，当前 Z-score={a['z']}")
