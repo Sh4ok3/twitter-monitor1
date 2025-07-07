@@ -16,7 +16,7 @@ jobs:
       - run: pip install -r requirements.txt
       - env:
            - name: 拉取推文 (snscrape)
-    run: python scrape_tweets.py
+        run: python scrape_tweets.py
 
       - env:
            PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
