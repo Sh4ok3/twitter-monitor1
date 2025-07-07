@@ -1,15 +1,10 @@
-import re, json, nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-
-nltk.download("punkt")
-nltk.download("stopwords")
-stop_words = set(stopwords.words("english"))
+import re, json
 
 def clean(text):
+    # 去掉链接、@提及、#标签，去掉所有标点，然后按空白分词
     t = re.sub(r"http\S+|@\w+|#","", text)
     t = re.sub(r"[^\w\s]", "", t)
-    return [w for w in word_tokenize(t.lower()) if w not in stop_words]
+    return [w.lower() for w in t.split() if w]
 
 if __name__ == "__main__":
     data = json.load(open("tweets.json", encoding="utf-8"))
